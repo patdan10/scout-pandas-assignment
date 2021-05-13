@@ -3,5 +3,5 @@ A repository for Scout's Assignment for the Data Science Intern Position. Given 
 Input a files of wind turbine information with missing information.
 Output a file with created information and correct timestamps.
 
-Built in Python using the Pandas, Datetime, and Pytz modules.
+Built in Python using the Pandas, Datetime, Numpy, and Pytz modules.
 Authored by Patrick Danielson
