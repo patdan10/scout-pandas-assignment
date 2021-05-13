@@ -34,7 +34,7 @@ def fileReader(inputFile, outputFile, dstActive):
 
 # Main function, to ensure correct running enviroment.
 # Set inputFile to input excel file, outputFile to desired output location,
-#     and dstActive to whether DST is recognized in the given area
+#     and dstActive to whether DST is recognized in the given area (On by default)
 if __name__ == '__main__':
     inputFile = '/Users/patrick/Desktop/test 2021-05-06 start.xlsx'
     outputFile = '/Users/patrick/Desktop/check results.xlsx'
