@@ -13,21 +13,29 @@ import dataframe_manipulation as em
 # Method in progress to create new excel file with conditions given
 # Input: Excel file
 # Output: Creates file on desktop
-def fileReader(inputFile):
+def fileReader(inputFile, outputFile, dstActive, tz):
     df = pd.read_excel(inputFile)
     
-    #Create columns
+    # Create time column
     em.appendTimeFlag(df)
-    em.appendVTWSFlag(df)
     
-    #Generate missing times
-    times = tg.makeTimes(df.iloc[0]['time'], df.iloc[-1]['time'], df['time'].tolist())
+    # Generate missing times, by finding 
+    times = tg.makeTimes(df['time'].tolist(), dstActive, tz)
     
-    #Add missing times to excel file
+    # Add missing times to excel file
     em.addNewTimes(df, times)
-    df.to_excel('/Users/patrick/Desktop/OUTPUT.xlsx', index=False)
+    
+    # Create and update VTWS Flags for missing values
+    em.appendVTWSFlag(df)
+    em.updateVTWSFlag(df)
+    
+    # Export file
+    df.to_excel(outputFile, index=False)
 
 # Main function, to ensure correct running enviroment.
 if __name__ == '__main__':
     inputFile = '/Users/patrick/Desktop/test 2021-05-06 start.xlsx'
-    fileReader(inputFile)
+    outputFile = '/Users/patrick/Desktop/check results.xlsx'
+    dstActive = True
+    tz = 'US/Central'
+    fileReader(inputFile, outputFile, dstActive, tz)
