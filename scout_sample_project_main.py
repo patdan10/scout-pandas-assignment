@@ -13,14 +13,14 @@ import dataframe_manipulation as em
 # Method in progress to create new excel file with conditions given
 # Input: Excel file
 # Output: Creates file on desktop
-def fileReader(inputFile, outputFile, dstActive, tz):
+def fileReader(inputFile, outputFile, dstActive):
     df = pd.read_excel(inputFile)
     
     # Create time column
     em.appendTimeFlag(df)
     
     # Generate missing times, by finding 
-    times = tg.makeTimes(df['time'].tolist(), dstActive, tz)
+    times = tg.makeTimes(df['time'].tolist(), dstActive)
     
     # Add missing times to excel file
     em.addNewTimes(df, times)
@@ -33,9 +33,10 @@ def fileReader(inputFile, outputFile, dstActive, tz):
     df.to_excel(outputFile, index=False)
 
 # Main function, to ensure correct running enviroment.
+# Set inputFile to input excel file, outputFile to desired output location,
+#     and dstActive to whether DST is recognized in the given area
 if __name__ == '__main__':
     inputFile = '/Users/patrick/Desktop/test 2021-05-06 start.xlsx'
     outputFile = '/Users/patrick/Desktop/check results.xlsx'
     dstActive = True
-    tz = 'US/Central'
-    fileReader(inputFile, outputFile, dstActive, tz)
+    fileReader(inputFile, outputFile, dstActive)

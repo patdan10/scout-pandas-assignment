@@ -10,10 +10,24 @@ from datetime import datetime as date, timedelta
 import pytz
 import pandas as pd
 
+# Immutables. Used for Timezone and DST Parsing. 2020 DST
+tzsNormal = {"-0500": 'US/Eastern',
+             "-0600": 'US/Central',
+             "-0700": 'US/Mountain',
+             "-0800": 'US/Pacific'}
+
+tzsDST = {"-0400": 'US/Eastern',
+          "-0500": 'US/Central',
+          "-0600": 'US/Mountain',
+          "-0700": 'US/Pacific'}
+
+dstStartNaive, dstEndNaive = date(2020, 3, 8, 1), date(2020, 11, 1, 1)
+
+
 # Method to create list of all times in hourly intervals between two given times. Timezone and DST sensitive.
 # Input: First time and last time as strings
 # Output: List of all times in hourly intervals between those times
-def makeTimes(currentTimes, dstActive, tz):
+def makeTimes(currentTimes, dstActive):
     # Initializations. List to be filled, as well as datetime objects of the bookend times
     timesList = []
     firstTime = currentTimes[0]
@@ -21,8 +35,20 @@ def makeTimes(currentTimes, dstActive, tz):
     timeObj = date.strptime(firstTime, '%Y-%m-%d %H:00:00%z')
     lastTimeObj = date.strptime(lastTime, '%Y-%m-%d %H:00:00%z')
     
+    
     # Timezone object creation and DST object creation
-    tz = pytz.timezone(tz)
+    offset = timeObj.strftime("%z")
+    
+    #Checks if object is DST by removing timezone information, then comparing to start and end dates
+    isDst = dstCheck(timeObj.replace(tzinfo=None))
+    
+    # Gets timezone from known offset and DST status
+    if isDst:
+        tz = pytz.timezone(tzsDST[offset])
+    else:
+        tz = pytz.timezone(tzsNormal[offset])
+    
+    # Localizes DST start and end for relevant comparisons
     dstStartTZ, dstEndTZ = tz.localize(date(2020, 3, 8, 1), is_dst=False), tz.localize(date(2020, 11, 1, 1), is_dst=True)
     
 
@@ -75,3 +101,11 @@ def timeEdit(string):
   string[:-2],
   string[-2:]
 )
+
+# Method to check if given time is in DST
+# Input: Datetime object
+# Output: Boolean representing DST or not
+def dstCheck(time):
+    if time > dstStartNaive and time < dstEndNaive:
+        return True
+    return False
