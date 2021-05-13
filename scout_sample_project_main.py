@@ -33,6 +33,7 @@ def fileReader(inputFile, outputFile, dstActive):
     df.to_excel(outputFile, index=False)
 
 # Main function, to ensure correct running enviroment.
+# Please replace inputFile, outputFile, and dstActive to the desired variables.
 # Set inputFile to input excel file, outputFile to desired output location,
 #     and dstActive to whether DST is recognized in the given area (On by default)
 if __name__ == '__main__':
